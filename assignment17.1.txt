@@ -1,0 +1,34 @@
+Q1. What is NoSQL data base? 
+Ana: NoSQL (originally referring to "non SQL", "non relational" or "not only SQL") database provides a mechanism for storage 
+     and retrieval of data which is modeled in means other than the tabular relations used in relational databases.
+
+Q2. How does data get stored in NoSQl database? 
+Ans: The main idea is that you have a snapshot file and a write ahead log (WAL) file. Snapshot contains already prepared data in a form of B-Tree with upper 
+     levels of that tree being permanently in RAM, that can be accesses for reading by doing only one disk seek. A WAL contains all the new changes on top of 
+     a current snapshot. A snapshot file is being totally rebuilt on a regular basis using current snapshot and a WAL. All the writes are done nearly as fast 
+     as with in-memory databases. 
+
+Q3. What is a column family in HBase? 
+Ans: A column family is a NoSQL object that contains columns of related data. It is a tuple (pair) that consists of a key-value pair, where the key is mapped to 
+     a value that is a set of columns. In analogy with relational databases, a column family is as a "table", each key-value pair being a "row". Each column is 
+     a tuple (triplet) consisting of a column name, a value, and a timestamp.
+
+Q4. How many maximum number of columns can be added to HBase table? 
+Ans: There is no hard limit to number of columns in HBase , we can have more than 1 million columns but usually three column families are recommended 
+     ( not more than three).
+
+Q5. Why columns are not defined at the time of table creation in HBase? 
+Ans: Because column families are stored in separate HFiles, keep the number of column families as small as possible. You also want to reduce the number of column 
+     families to reduce the frequency of MemStore flushes, and the frequency of compactions. And, by using the smallest number of column families possible, you can 
+     improve the LOAD time and reduce disk consumption.
+
+Q6. How does data get managed in HBase? 
+Ans: Data in Hbase is organized into tables.Tables are further organized into rows that store data.Each row is identified by a unique row key which does not 
+     belong to any data type but is stored as a bytearray. Column families are further used to group data in rows. Column families define the physical structure of 
+     data so they are defined upfront and their modification is difficult.A unique combination of row key, column family and column qualifier forms a cell. Data 
+     contained in a cell is referred to as cell value. Versioning happens to cell values using a timestamp of when the cell was written.
+
+Q7. What happens internally when new data gets inserted into HBase table? 
+Ans: When you insert data into HBase, a timestamp is required. The timestamp can be generated automatically by the RegionServer or can be supplied by you. The timestamp 
+     must be unique per version of a given cell, because the timestamp identifies the version. To modify a previous version of a cell, for instance, you would issue 
+     a Put with a different value for the data itself, but the same timestamp.
